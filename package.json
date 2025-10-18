@@ -1,0 +1,43 @@
+{
+  "name": "vibesite",
+  "version": "1.0.0",
+  "description": "vibe check - Intuitive and fast LLM evals",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "tsx watch src/server/index.ts",
+    "dev:client": "vite",
+    "dev:worker": "wrangler dev",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "tsc && vite build",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:worker": "tsc -p tsconfig.worker.json",
+    "start": "NODE_ENV=production node dist/server/index.js",
+    "preview": "vite preview",
+    "deploy:gcp": "./scripts/deploy-gcp.sh",
+    "deploy:cloudflare": "./scripts/deploy-cloudflare.sh",
+    "cleanup:gcp": "./scripts/cleanup-gcp.sh",
+    "cleanup:cloudflare": "./scripts/cleanup-cloudflare.sh"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8",
+    "wrangler": "^3.95.0"
+  }
+}

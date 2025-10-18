@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  vibesite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - LOOPS_API_KEY=${LOOPS_API_KEY}
+    restart: unless-stopped
+    container_name: vibesite

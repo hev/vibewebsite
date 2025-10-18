@@ -1,0 +1,29 @@
+name = "vibesite"
+main = "dist/worker/index.js"
+compatibility_date = "2024-01-01"
+
+# Bind to Cloudflare Pages for static asset serving
+# Update this with your Pages project name after creating it
+# [env.production.assets]
+# bucket = "./dist/client"
+
+# Environment variables (non-secret)
+[vars]
+NODE_ENV = "production"
+
+# Secrets (set via: wrangler secret put LOOPS_API_KEY)
+# LOOPS_API_KEY will be available in env.LOOPS_API_KEY
+
+# Build configuration
+[build]
+command = "npm run build:worker"
+upload_format = "modules"
+
+# Worker settings
+[env.production]
+name = "vibesite"
+route = { pattern = "*/*", zone_name = "yourdomain.com" }
+
+# Development settings
+[env.development]
+name = "vibesite-dev"

@@ -52,9 +52,73 @@ if ! command -v gcloud &> /dev/null; then
     exit 1
 fi
 
+# Check if project exists
+log_info "Checking if project ${PROJECT_ID} exists..."
+if ! gcloud projects describe ${PROJECT_ID} &> /dev/null; then
+    log_warn "Project '${PROJECT_ID}' does not exist or you don't have permission to access it."
+    echo ""
+    echo "You have two options:"
+    echo "  1. Create a new project with ID '${PROJECT_ID}'"
+    echo "  2. Exit and use an existing project ID"
+    echo ""
+    read -p "Would you like to create the project '${PROJECT_ID}'? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Creating project ${PROJECT_ID}..."
+        if gcloud projects create ${PROJECT_ID} --set-as-default; then
+            log_info "Project created successfully!"
+            # Wait a moment for the project to be fully initialized
+            sleep 5
+        else
+            log_error "Failed to create project. You may need to:"
+            log_error "  1. Choose a different project ID (it must be globally unique)"
+            log_error "  2. Enable billing for your account"
+            log_error "  3. Verify you have the resourcemanager.projects.create permission"
+            echo ""
+            echo "To create a project manually:"
+            echo "  gcloud projects create ${PROJECT_ID}"
+            echo ""
+            echo "Or visit: https://console.cloud.google.com/projectcreate"
+            exit 1
+        fi
+    else
+        log_error "Deployment cancelled. Please provide an existing project ID."
+        echo ""
+        echo "To list your existing projects, run:"
+        echo "  gcloud projects list"
+        exit 1
+    fi
+else
+    log_info "Project ${PROJECT_ID} found."
+fi
+
 # Set the project
 log_info "Setting GCP project to ${PROJECT_ID}..."
 gcloud config set project ${PROJECT_ID}
+
+# Check if billing is enabled
+log_info "Checking if billing is enabled..."
+BILLING_ENABLED=$(gcloud billing projects describe ${PROJECT_ID} --format='value(billingEnabled)' 2>/dev/null || echo "false")
+
+if [ "$BILLING_ENABLED" != "True" ]; then
+    log_error "Billing is not enabled for project '${PROJECT_ID}'."
+    echo ""
+    echo "Cloud Run and other services require billing to be enabled."
+    echo ""
+    echo "To enable billing for this project:"
+    echo "  1. Visit: https://console.cloud.google.com/billing/linkedaccount?project=${PROJECT_ID}"
+    echo "  2. Select or create a billing account"
+    echo "  3. Link it to your project"
+    echo ""
+    echo "Or use the gcloud command:"
+    echo "  gcloud billing projects link ${PROJECT_ID} --billing-account=BILLING_ACCOUNT_ID"
+    echo ""
+    echo "To list your billing accounts, run:"
+    echo "  gcloud billing accounts list"
+    exit 1
+fi
+
+log_info "Billing is enabled."
 
 # Enable required APIs
 log_info "Enabling required GCP APIs..."

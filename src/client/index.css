@@ -300,6 +300,41 @@ pre {
     font-size: 0.9em;
 }
 
+/* FAQ */
+.faq {
+    margin: 30px 0 20px;
+}
+
+.faq-list {
+    margin-top: 15px;
+}
+
+.faq-item + .faq-item {
+    padding-top: 14px;
+    margin-top: 14px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.faq-item dt {
+    font-weight: 700;
+    color: #c9d1d9;
+}
+
+.faq-item dd {
+    margin-left: 16px; /* indent answers slightly */
+    margin-top: 6px;
+    color: #8b949e;
+}
+
+/* Links - brighten for readability (Halloween orange) */
+a, .github-link {
+    color: #ff8a1f; /* bright orange */
+}
+
+a:hover, .github-link:hover {
+    color: #ffa64d;
+}
+
 /* Footer */
 footer {
     padding: 40px 0;

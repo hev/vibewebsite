@@ -1,6 +1,7 @@
 import Header from './components/Header'
 import CTASection from './components/CTASection'
 import CodeDemo from './components/CodeDemo'
+import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
           <CTASection />
           <CodeDemo />
         </div>
+        <FAQ />
       </main>
       <Footer />
     </>

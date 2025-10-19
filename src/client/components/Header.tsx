@@ -47,7 +47,7 @@ function Header() {
               <input
                 type="email"
                 className="header-input"
-                placeholder="🎃 join halloween pop up"
+                placeholder="🎃 join the halloween pop up"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}

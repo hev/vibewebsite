@@ -22,8 +22,14 @@ function FAQ() {
           <div className="faq-item">
             <dt>How much does it cost?</dt>
             <dd>
-              It’s free! Actually better than free, we're sponsoring invitees with credits to
+              It's free! Actually better than free, we're sponsoring invitees with credits to
               spend.
+            </dd>
+          </div>
+          <div className="faq-item">
+            <dt>How are run prices calculated?</dt>
+            <dd>
+              Run prices are determined by aggregating pricing data from our inference providers and applying a margin. We plan to actively conduct pricing experiments during the pop up so you may notice pricing and credit amounts change unexpectedly.
             </dd>
           </div>
           <div className="faq-item">

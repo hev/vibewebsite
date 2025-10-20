@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react'
+import posthog from 'posthog-js'
 
 function Header() {
   const [email, setEmail] = useState('')
@@ -24,8 +25,66 @@ function Header() {
       if (response.ok) {
         setMessage({ type: 'success', text: data.message || 'Successfully subscribed!' })
         setEmail('')
+        
+        // Track signup event
+        if (typeof posthog !== 'undefined') {
+          try {
+            console.log('📊 PostHog: Sending email_subscribed event for', email)
+            
+            posthog.identify(email, {
+              email: email,
+              signup_date: new Date().toISOString(),
+              source: 'header_form',
+              production: import.meta.env.VITE_PRODUCTION === 'true'
+            })
+            
+            const eventData = {
+              email: email,
+              timestamp: new Date().toISOString(),
+              page_url: window.location.href,
+              page_title: document.title,
+              is_existing_user: data.message?.includes('already in your audience') || false,
+              loops_message: data.message,
+              source: 'header_form',
+              success: true,
+              production: import.meta.env.VITE_PRODUCTION === 'true'
+            }
+            
+            posthog.capture('email_subscribed', eventData)
+            console.log('✅ PostHog: email_subscribed event sent successfully')
+          } catch (error) {
+            console.error('❌ PostHog tracking error:', error)
+          }
+        } else {
+          console.error('❌ PostHog: Not available for email tracking')
+        }
       } else {
         setMessage({ type: 'error', text: data.error || 'Failed to subscribe' })
+        
+        // Track failed signup attempt
+        if (typeof posthog !== 'undefined') {
+          try {
+            console.log('📊 PostHog: Sending email_subscribe_failed event for', email)
+            
+            const eventData = {
+              email: email,
+              error: data.error || 'Unknown error',
+              timestamp: new Date().toISOString(),
+              page_url: window.location.href,
+              page_title: document.title,
+              source: 'header_form',
+              success: false,
+              production: import.meta.env.VITE_PRODUCTION === 'true'
+            }
+            
+            posthog.capture('email_subscribe_failed', eventData)
+            console.log('✅ PostHog: email_subscribe_failed event sent successfully')
+          } catch (error) {
+            console.error('❌ PostHog tracking error:', error)
+          }
+        } else {
+          console.error('❌ PostHog: Not available for failed email tracking')
+        }
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Network error. Please try again.' })

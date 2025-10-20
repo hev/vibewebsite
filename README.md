@@ -34,12 +34,33 @@ npm install
 cp .env.example .env
 ```
 
-3. Add your Loops API key to `.env`:
+3. Create a `.env` file in the root directory with your API keys:
 
 ```
+# Email Service (Required)
 LOOPS_API_KEY=your_loops_api_key_here
-PORT=3001
+
+# PostHog Analytics (Optional)
+VITE_POSTHOG_KEY=your_posthog_key_here
+VITE_POSTHOG_HOST=https://us.i.posthog.com
+
+# Environment Configuration
+VITE_PRODUCTION=false
+
+# Server Configuration
+PORT=8081
+
+# Client Configuration (Vite)
+VITE_CLIENT_PORT=8080
 ```
+
+**Environment Variables:**
+- `LOOPS_API_KEY` (required): Your Loops API key for email subscriptions
+- `VITE_POSTHOG_KEY` (optional): PostHog project API key for analytics
+- `VITE_POSTHOG_HOST` (optional): PostHog host URL (default: https://us.i.posthog.com)
+- `VITE_PRODUCTION` (optional): Set to "true" for production deployments, adds production property to PostHog events (default: false)
+- `PORT` (optional): Server port (default: 8081)
+- `VITE_CLIENT_PORT` (optional): Client development port (default: 8080)
 
 ### Development
 
